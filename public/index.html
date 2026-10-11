@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bredrin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="face-wrap" aria-hidden="true">
+      <div class="face" id="face" data-mood="neutral">
+        <div class="screen">
+          <div class="eyes" id="eyes">
+            <div class="eye left"><div class="eye-blink"><div class="eye-shape">
+              <div class="lid top"></div><div class="lid bottom"></div>
+            </div></div></div>
+            <div class="eye right"><div class="eye-blink"><div class="eye-shape">
+              <div class="lid top"></div><div class="lid bottom"></div>
+            </div></div></div>
+
+            <svg class="fx hearts" viewBox="0 0 200 80">
+              <path class="heart" d="M45 70 C10 45 10 15 30 12 C40 10 45 20 45 25 C45 20 50 10 60 12 C80 15 80 45 45 70Z" />
+              <path class="heart" d="M155 70 C120 45 120 15 140 12 C150 10 155 20 155 25 C155 20 160 10 170 12 C190 15 190 45 155 70Z" />
+            </svg>
+            <svg class="fx stars" viewBox="0 0 200 80">
+              <path class="star" d="M45 5 L54 30 L80 31 L59 47 L67 73 L45 57 L23 73 L31 47 L10 31 L36 30Z" />
+              <path class="star" d="M155 5 L164 30 L190 31 L169 47 L177 73 L155 57 L133 73 L141 47 L120 31 L146 30Z" />
+            </svg>
+          </div>
+
+          <svg class="mouth" viewBox="0 0 60 24"><path id="mouth-path" /></svg>
+
+          <div class="cheek left"></div><div class="cheek right"></div>
+          <svg class="fx tear" viewBox="0 0 20 30"><path d="M10 0 C10 10 0 15 0 21 A10 9 0 0 0 20 21 C20 15 10 10 10 0Z" /></svg>
+          <div class="fx question">?</div>
+          <div class="fx zzz"><span>z</span><span>z</span><span>Z</span></div>
+          <div class="fx dots"><span></span><span></span><span></span></div>
+          <svg class="fx anger" viewBox="0 0 40 40">
+            <path d="M14 4 Q16 14 4 14 M26 4 Q24 14 36 14 M4 26 Q16 26 14 36 M36 26 Q24 26 26 36" />
+          </svg>
+          <div class="fx sparkles"><span>✦</span><span>✧</span><span>✦</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chat" id="chat" aria-live="polite"></section>
+
+    <form class="composer" id="composer" autocomplete="off">
+      <select id="model" class="model" title="Model"></select>
+      <input id="input" type="text" placeholder="Say something to Bredrin…" maxlength="2000" />
+      <button type="submit" id="send" aria-label="Send">
+        <svg viewBox="0 0 24 24"><path d="M4 12 L20 4 L14 20 L11 13 Z" /></svg>
+      </button>
+    </form>
+  </main>
+  <script src="face.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

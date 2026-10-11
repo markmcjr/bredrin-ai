@@ -1,0 +1,28 @@
+{
+  "name": "bredrin-ai",
+  "version": "1.0.0",
+  "description": "Bredrin: a chat agent with an animated robot face",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markmcjr/bredrin-ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markmcjr/bredrin-ai/issues"
+  },
+  "homepage": "https://github.com/markmcjr/bredrin-ai#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}

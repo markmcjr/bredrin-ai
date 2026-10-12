@@ -13,7 +13,7 @@ const PUBLIC_DIR = path.join(here, "public");
 const PORT = Number(process.env.PORT) || 3000;
 
 // Models offered in the picker. Override with MODELS="id:Label,id:Label".
-const MODELS = (process.env.MODELS ||
+export const MODELS = (process.env.MODELS ||
   "claude-opus-5-5:Opus 5.5,claude-sonnet-5-5:Sonnet 5.5,claude-haiku-5-5:Haiku 5.5,claude-fable-5-1:Fable 5.1,demo:Demo (no API key)")
   .split(",")
   .map((s) => {
@@ -119,7 +119,7 @@ async function streamClaude(model, messages, emit, signal) {
 }
 
 // Offline brain so the face can be demoed without an API key.
-const DEMO_LINES = [
+export const DEMO_LINES = [
   "[[happy]] Hello hello! I'm running in demo mode, which means my brain is a list of pre-written jokes. [[smug]] Still smarter than most toasters. [[suggest: Prove it, robot]] [[suggest: Tell me a joke]]",
   "[[thinking]] Let me think about that... [[surprised]] Oh! I don't actually have a model plugged in. [[laugh]] Set ANTHROPIC_API_KEY and pick a real model, then I get *opinions*. [[suggest: How do I do that?]] [[suggest: Make a face for me]]",
   "[[confused]] I'd answer that, but demo-me only knows six sentences. [[wink]] This is one of them. [[suggest: Do the other five]]",

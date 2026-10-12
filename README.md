@@ -39,3 +39,11 @@ test/            Unit tests for the streaming [[mood]] tag parser (npm test)
 - The personality lives in the `SYSTEM_PROMPT` in `server.js`. Edit it to change Bredrin's voice.
 - To add a mood, add its name to `MOODS` in `server.js` and give it an entry in `MOODS`/`MOUTHS` in `public/face.js`.
 - Replies use effort `low` to keep the chat snappy. Opus, Sonnet and Fable requests turn on the API's server-side refusal fallback.
+
+## Static demo (no server)
+
+`npm run build:static` writes a server-less copy to `dist/` that runs only the Demo model in the browser. You can put it on any static host, for example:
+
+```bash
+bash itpshare.sh publish ./dist --title "Bredrin demo" --slug bredrin-demo
+```

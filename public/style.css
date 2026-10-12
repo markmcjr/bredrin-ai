@@ -89,15 +89,15 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  padding: 26px 0 4px;
+  padding: 52px 0 4px;
 }
 
 .aura {
   position: absolute;
-  top: -6px;
+  top: -18px;
   left: 50%;
-  width: 400px;
-  height: 260px;
+  width: 340px;
+  height: 340px;
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -125,18 +125,20 @@ body {
 .stage:has(.face[data-mood="laugh"]) .aura i   { opacity: 1; animation-duration: 3s; }
 .stage:has(.face.talking) .aura i              { animation-duration: 4s; }
 
+/* round pearl-white head with the black face screen set into it */
 .face {
   --gx: 0px; --gy: 0px;
   position: relative;
-  width: 270px;
-  height: 172px;
-  padding: 9px;
-  border-radius: 48% / 52%;
-  background: linear-gradient(160deg, #3a3f63 0%, #121428 40%, #05060d 100%);
+  width: 224px;
+  height: 224px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 26%, #ffffff 0%, #f1f3ff 38%, #d3d9ff 78%, #b4beff 100%);
   box-shadow:
-    0 26px 50px -20px rgba(30, 30, 90, .6),
-    inset 0 2px 2px rgba(255, 255, 255, .35),
-    inset 0 -6px 14px rgba(120, 140, 255, .25);
+    0 28px 50px -22px rgba(40, 50, 140, .55),
+    inset 0 -10px 22px rgba(110, 125, 230, .35),
+    inset 0 6px 10px rgba(255, 255, 255, .9);
   cursor: pointer;
   user-select: none;
   animation: hover 5s ease-in-out infinite;
@@ -146,8 +148,11 @@ body {
 
 .visor {
   position: relative;
-  height: 100%;
+  width: 252px;
+  height: 154px;
+  zoom: .7;
   border-radius: 46% / 50%;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, .55), 0 6px 14px rgba(20, 24, 70, .35);
   background: radial-gradient(70% 70% at 50% 48%, var(--visor) 55%, #04050b 100%);
   overflow: hidden;
   transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
@@ -503,15 +508,11 @@ body {
 #send:disabled { opacity: .45; cursor: default; transform: none; }
 
 @media (max-width: 480px) {
-  .stage { padding-top: 16px; gap: 10px; }
-  .aura { width: 300px; height: 200px; top: -2px; }
-  .face { width: 210px; height: 134px; padding: 7px; }
-  .eyes { gap: 36px; padding-bottom: 12px; transform: translate(var(--gx), var(--gy)) scale(.78); }
-  .cheek { top: 84px; }
-  .cheek.left { left: 34px; } .cheek.right { right: 34px; }
-  .tear { left: 54px; top: 78px; }
-  .mouth { bottom: 14px; width: 38px; }
-  .question, .zzz, .dots, .anger { right: 26px; top: 12px; }
+  .stage { gap: 10px; }
+  .stage { padding-top: 34px; }
+  .aura { width: 250px; height: 250px; top: -8px; }
+  .face { width: 168px; height: 168px; }
+  .visor { zoom: .52; }
   .avatar { width: 32px; height: 32px; }
   .avatar::before { width: 24px; height: 16px; }
   .avatar::after { width: 4px; height: 6px; box-shadow: 7px 0 0 var(--eye-mid); translate: -3.5px 0; }

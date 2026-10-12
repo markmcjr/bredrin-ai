@@ -150,7 +150,7 @@ body {
   position: relative;
   width: 252px;
   height: 154px;
-  zoom: .7;
+  zoom: .8;
   border-radius: 46% / 50%;
   box-shadow: 0 0 0 5px rgba(255, 255, 255, .55), 0 6px 14px rgba(20, 24, 70, .35);
   background: radial-gradient(70% 70% at 50% 48%, var(--visor) 55%, #04050b 100%);
@@ -173,8 +173,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 50px;
-  padding-bottom: 16px;
+  gap: 52px;
+  padding-bottom: 4px;
   transform: translate(var(--gx), var(--gy));
   transition: transform .35s cubic-bezier(.34, 1.4, .64, 1);
 }
@@ -228,30 +228,10 @@ body {
   transform: translateY(calc((1 - var(--bot)) * 100%)) rotate(var(--bot-rot));
 }
 
-.mouth {
-  position: absolute;
-  left: 50%;
-  bottom: 20px;
-  width: 46px;
-  height: 19px;
-  transform: translateX(-50%);
-  overflow: visible;
-}
-.mouth path {
-  fill: none;
-  stroke: var(--eye-mid);
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 5px var(--glow));
-  transition: d .25s ease, stroke .4s;
-}
-.face.talking .mouth { animation: talk .18s ease-in-out infinite alternate; }
-@keyframes talk { from { transform: translateX(-50%) scaleY(.6); } to { transform: translateX(-50%) scaleY(1.35); } }
 
 .cheek {
   position: absolute;
-  top: 108px;
+  top: 112px;
   width: 30px;
   height: 12px;
   border-radius: 50%;
@@ -272,7 +252,7 @@ body {
 @keyframes pulse { from { transform: scale(.9); } to { transform: scale(1.1); } }
 @keyframes spin { from { transform: rotate(0) scale(1); } 50% { transform: rotate(180deg) scale(1.12); } to { transform: rotate(360deg) scale(1); } }
 
-.tear { width: 13px; height: 20px; left: 70px; top: 100px; fill: #8fc2ff; filter: drop-shadow(0 0 6px #8fc2ff); }
+.tear { width: 13px; height: 20px; left: 70px; top: 106px; fill: #8fc2ff; filter: drop-shadow(0 0 6px #8fc2ff); }
 .face[data-mood="sad"] .tear { opacity: 1; animation: drip 2.2s ease-in infinite; }
 @keyframes drip { 0% { transform: translateY(-6px); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(50px); opacity: 0; } }
 
@@ -324,6 +304,8 @@ body {
 .face[data-mood="sleepy"] .visor { animation: breathe 3.2s ease-in-out infinite; }
 .face.talking:not([data-mood="laugh"]):not([data-mood="excited"]) .visor { animation: chatter .35s ease-in-out infinite alternate; }
 .face.poked { transform: scale(.94); }
+.face.talking .eye-shape { animation: speak .22s ease-in-out infinite alternate; }
+@keyframes speak { to { filter: brightness(1.25); } }
 
 @keyframes giggle { from { transform: translateY(0) rotate(-1.5deg); } to { transform: translateY(-4px) rotate(1.5deg); } }
 @keyframes hop { from { transform: translateY(0); } to { transform: translateY(-6px); } }
@@ -512,7 +494,7 @@ body {
   .stage { padding-top: 34px; }
   .aura { width: 250px; height: 250px; top: -8px; }
   .face { width: 168px; height: 168px; }
-  .visor { zoom: .52; }
+  .visor { zoom: .6; }
   .avatar { width: 32px; height: 32px; }
   .avatar::before { width: 24px; height: 16px; }
   .avatar::after { width: 4px; height: 6px; box-shadow: 7px 0 0 var(--eye-mid); translate: -3.5px 0; }

@@ -1,30 +1,13 @@
-// Face controller: turns a mood name into eye/lid/mouth positions,
+// Face controller: turns a mood name into eye and eyelid positions,
 // and keeps the face alive with blinking, glancing and gaze tracking.
 
 const Face = (() => {
   const face = document.getElementById("face");
   const eyes = document.getElementById("eyes");
   const [eyeL, eyeR] = face.querySelectorAll(".eye");
-  const mouth = document.getElementById("mouth-path");
 
   const BASE = { w: 1, h: 1, s: 1, top: 0, topRot: 0, bot: 0, botRot: 0, dx: 0, dy: 0 };
 
-  const MOUTHS = {
-    neutral:   "M20 12 Q30 15 40 12",
-    happy:     "M15 8 Q30 22 45 8",
-    laugh:     "M13 6 Q30 28 47 6 Q30 10 13 6",
-    excited:   "M13 6 Q30 28 47 6 Q30 10 13 6",
-    love:      "M18 9 Q30 19 42 9",
-    wink:      "M18 10 Q32 20 44 7",
-    smug:      "M18 14 Q34 16 43 7",
-    surprised: "M25 12 Q30 3 35 12 Q30 21 25 12",
-    confused:  "M17 14 Q23 9 30 14 Q37 19 43 13",
-    thinking:  "M22 15 Q30 13 37 12",
-    sad:       "M17 18 Q30 5 43 18",
-    annoyed:   "M18 15 Q30 12 42 13",
-    sleepy:    "M25 14 Q30 16 35 14",
-    listening: "M22 12 Q30 15 38 12",
-  };
 
   // Each mood: left eye, optional right eye (mirrored by CSS), and a gaze nudge.
   const MOODS = {
@@ -79,8 +62,6 @@ const Face = (() => {
     face.dataset.mood = mood;
     applyEye(eyeL, m.L);
     applyEye(eyeR, m.R || m.L);
-    mouth.setAttribute("d", MOUTHS[mood] || MOUTHS.neutral);
-    mouth.style.d = `path("${MOUTHS[mood] || MOUTHS.neutral}")`;
     updateGaze();
   }
 

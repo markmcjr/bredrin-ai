@@ -42,7 +42,9 @@ Personality:
 Your face: you control your expression with mood tags written as [[mood]]. Allowed moods: ${MOODS.join(", ")}.
 - ALWAYS start every reply with a mood tag, e.g. "[[smug]] Oh, you want *my* opinion?"
 - You may switch mood mid-reply when the feeling changes, e.g. "[[surprised]] Wait, really? [[laugh]] That's the best thing I've heard all day."
-- Use 1-3 tags per reply. Tags are invisible to the user; never mention them or explain them.`;
+- Use 1-3 tags per reply. Tags are invisible to the user; never mention them or explain them.
+
+Quick replies: end most replies with 2-3 tappable suggestions for what the user might say next, written in the user's voice, max 6 words each, ideally with a bit of fun, e.g. [[suggest: Tell me another one]] [[suggest: Okay, be serious now]]. Put them at the very end.`;
 
 const client = new Anthropic();
 
@@ -53,19 +55,19 @@ const MIME = {
   ".svg": "image/svg+xml",
 };
 
-// Splits streamed text into text/mood events, holding back a possibly
+// Splits streamed text into text/mood/suggest events, holding back a possibly
 // incomplete "[[..." at the end of a chunk until the next one arrives.
 export function createMoodParser(emit) {
   let buf = "";
-  const tag = /\[\[\s*([a-zA-Z]+)\s*\]\]/g;
+  const tag = /\[\[\s*(?:suggest\s*:\s*([^\]\n]{1,80}?)|([a-zA-Z]+))\s*\]\]/g;
   function drain(final) {
     let last = 0;
     let m;
     tag.lastIndex = 0;
     while ((m = tag.exec(buf))) {
       if (m.index > last) emit({ type: "text", text: buf.slice(last, m.index) });
-      const mood = m[1].toLowerCase();
-      if (MOODS.includes(mood)) emit({ type: "mood", mood });
+      if (m[1]) emit({ type: "suggest", text: m[1].trim() });
+      else if (MOODS.includes(m[2].toLowerCase())) emit({ type: "mood", mood: m[2].toLowerCase() });
       last = tag.lastIndex;
     }
     buf = buf.slice(last);
@@ -74,10 +76,10 @@ export function createMoodParser(emit) {
       buf = "";
       return;
     }
-    // hold back the earliest tail that could still become a tag ("[", "[[sm", "[[smug]")
-    const partial = /^\[(\[\s*[a-zA-Z]*\s*\]?)?$/;
+    // hold back the earliest tail that could still become a tag ("[", "[[sm", "[[suggest: Tell")
+    const partial = /^\[(\[[^\]\n]{0,90}\]?)?$/;
     let keepFrom = buf.length;
-    for (let i = Math.max(0, buf.length - 20); i < buf.length; i++) {
+    for (let i = Math.max(0, buf.length - 100); i < buf.length; i++) {
       if (buf[i] === "[" && partial.test(buf.slice(i))) { keepFrom = i; break; }
     }
     if (keepFrom > 0) emit({ type: "text", text: buf.slice(0, keepFrom) });
@@ -118,9 +120,9 @@ async function streamClaude(model, messages, emit, signal) {
 
 // Offline brain so the face can be demoed without an API key.
 const DEMO_LINES = [
-  "[[happy]] Hello hello! I'm running in demo mode, which means my brain is a list of pre-written jokes. [[smug]] Still smarter than most toasters.",
-  "[[thinking]] Let me think about that... [[surprised]] Oh! I don't actually have a model plugged in. [[laugh]] Set ANTHROPIC_API_KEY and pick a real model, then I get *opinions*.",
-  "[[confused]] I'd answer that, but demo-me only knows six sentences. [[wink]] This is one of them.",
+  "[[happy]] Hello hello! I'm running in demo mode, which means my brain is a list of pre-written jokes. [[smug]] Still smarter than most toasters. [[suggest: Prove it, robot]] [[suggest: Tell me a joke]]",
+  "[[thinking]] Let me think about that... [[surprised]] Oh! I don't actually have a model plugged in. [[laugh]] Set ANTHROPIC_API_KEY and pick a real model, then I get *opinions*. [[suggest: How do I do that?]] [[suggest: Make a face for me]]",
+  "[[confused]] I'd answer that, but demo-me only knows six sentences. [[wink]] This is one of them. [[suggest: Do the other five]]",
   "[[excited]] Ooh, a question! My favourite kind of sentence. [[sad]] Shame I can't answer it properly yet.",
   "[[love]] You keep talking to a robot with no brain attached. [[happy]] That's commitment. I respect it.",
   "[[sleepy]] Demo mode is very relaxing, honestly... [[annoyed]] Okay fine, I'm awake. Plug in a key!",

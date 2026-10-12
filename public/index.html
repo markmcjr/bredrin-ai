@@ -4,13 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bredrin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="backdrop" aria-hidden="true"><i></i><i></i><i></i></div>
+
   <main class="app">
-    <section class="face-wrap" aria-hidden="true">
+    <section class="stage" aria-hidden="true">
+      <div class="aura"><i></i><i></i><i></i></div>
+
       <div class="face" id="face" data-mood="neutral">
-        <div class="screen">
+        <div class="visor">
           <div class="eyes" id="eyes">
             <div class="eye left"><div class="eye-blink"><div class="eye-shape">
               <div class="lid top"></div><div class="lid bottom"></div>
@@ -40,17 +46,22 @@
             <path d="M14 4 Q16 14 4 14 M26 4 Q24 14 36 14 M4 26 Q16 26 14 36 M36 26 Q24 26 26 36" />
           </svg>
           <div class="fx sparkles"><span>✦</span><span>✧</span><span>✦</span></div>
+          <div class="gloss"></div>
         </div>
       </div>
+
+      <div class="status" id="status"><span class="dot"></span><span id="status-text">Online</span></div>
     </section>
 
     <section class="chat" id="chat" aria-live="polite"></section>
 
+    <div class="chips" id="chips"></div>
+
     <form class="composer" id="composer" autocomplete="off">
       <select id="model" class="model" title="Model"></select>
-      <input id="input" type="text" placeholder="Say something to Bredrin…" maxlength="2000" />
+      <input id="input" type="text" placeholder="Message Bredrin…" maxlength="2000" />
       <button type="submit" id="send" aria-label="Send">
-        <svg viewBox="0 0 24 24"><path d="M4 12 L20 4 L14 20 L11 13 Z" /></svg>
+        <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
       </button>
     </form>
   </main>

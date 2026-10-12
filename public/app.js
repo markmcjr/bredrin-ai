@@ -6,13 +6,16 @@ const form = document.getElementById("composer");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("send");
 const modelSel = document.getElementById("model");
+const chipsEl = document.getElementById("chips");
+const statusEl = document.getElementById("status");
+const statusText = document.getElementById("status-text");
 
 const history = [];
 let busy = false;
 
 const GREETINGS = [
-  "[[happy]] Oh hey, a human! [[wink]] I'm Bredrin. Mostly eyes, zero hands, plenty of opinions. What's up?",
-  "[[excited]] You're here! [[smug]] I've been practising my expressions all day. Go on, say something.",
+  "[[happy]] Oh hey, a human! [[wink]] I'm Bredrin. Mostly eyes, zero hands, plenty of opinions. What's up? [[suggest: Tell me a joke]] [[suggest: What can you do?]] [[suggest: Show me your faces]]",
+  "[[excited]] You're here! [[smug]] I've been practising my expressions all day. Go on, say something. [[suggest: Make me laugh]] [[suggest: Roast my to-do list]] [[suggest: Who made you?]]",
 ];
 
 // ---------- model picker ----------
@@ -42,21 +45,48 @@ function format(text) {
     .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g, "$1<em>$2</em>");
 }
 function addMsg(cls, text = "") {
+  const row = document.createElement("div");
+  row.className = `row ${cls}`;
+  if (cls === "bot") row.innerHTML = '<div class="avatar"></div>';
   const el = document.createElement("div");
   el.className = `msg ${cls}`;
   el.innerHTML = format(text);
-  chat.appendChild(el);
+  row.appendChild(el);
+  chat.appendChild(row);
   chat.scrollTop = chat.scrollHeight;
+  el.remove = () => row.remove(); // removing a message takes its row with it
   return el;
+}
+
+function setStatus(state) {
+  const labels = { online: "Online", listening: "Listening", thinking: "Thinking", responding: "Responding" };
+  statusEl.dataset.state = state;
+  statusText.textContent = labels[state];
+}
+
+function showChips(list) {
+  chipsEl.replaceChildren(...list.slice(0, 3).map((t) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.textContent = t;
+    b.addEventListener("click", () => { if (!busy) send(t); });
+    return b;
+  }));
+  chat.scrollTop = chat.scrollHeight;
 }
 
 // Plays a pre-scripted line through the same mood/text pipeline (used for greetings).
 async function playScripted(line) {
   const el = addMsg("bot");
   let text = "";
-  const parts = line.split(/(\[\[[a-z]+\]\])/);
+  const suggestions = [];
+  const parts = line.split(/(\[\[[^\]]+\]\])/);
   Face.setTalking(true);
+  setStatus("responding");
   for (const p of parts) {
+    const s = p.match(/^\[\[suggest:\s*(.+)\]\]$/);
+    if (s) { suggestions.push(s[1].trim()); continue; }
     const m = p.match(/^\[\[([a-z]+)\]\]$/);
     if (m) { Face.set(m[1]); continue; }
     for (const ch of p) {
@@ -66,6 +96,8 @@ async function playScripted(line) {
     }
   }
   Face.setTalking(false);
+  setStatus("online");
+  showChips(suggestions);
   setTimeout(() => Face.set(Face.mood, { hold: 2500 }), 0);
   return text.trim();
 }
@@ -76,8 +108,11 @@ async function send(text) {
   sendBtn.disabled = true;
   history.push({ role: "user", content: text });
   addMsg("me", text);
+  showChips([]);
 
   Face.set("thinking");
+  setStatus("thinking");
+  const suggestions = [];
   const el = addMsg("bot");
   let reply = "";
   let raw = ""; // reply with [[mood]] tags kept, so the model sees its own habit
@@ -106,11 +141,14 @@ async function send(text) {
           raw += `[[${ev.mood}]] `;
           Face.set(ev.mood);
         } else if (ev.type === "text") {
-          if (!gotText) { gotText = true; Face.setTalking(true); if (Face.mood === "thinking") Face.set("neutral"); }
+          if (!gotText) { gotText = true; Face.setTalking(true); setStatus("responding"); if (Face.mood === "thinking") Face.set("neutral"); }
           reply += ev.text;
           raw += ev.text;
           el.innerHTML = format(reply.trimStart());
           chat.scrollTop = chat.scrollHeight;
+        } else if (ev.type === "suggest") {
+          raw += ` [[suggest: ${ev.text}]]`;
+          suggestions.push(ev.text);
         } else if (ev.type === "error") {
           el.remove();
           addMsg("err", ev.message);
@@ -125,6 +163,8 @@ async function send(text) {
   }
 
   Face.setTalking(false);
+  setStatus("online");
+  showChips(suggestions);
   if (reply.trim()) {
     history.push({ role: "assistant", content: raw.trim() });
     Face.set(Face.mood, { hold: 3500 }); // linger on the last expression, then relax
@@ -151,8 +191,13 @@ input.addEventListener("input", () => {
   wake();
   if (busy) return;
   if (Face.mood === "neutral" || Face.mood === "listening") Face.set("listening");
+  setStatus("listening");
   clearTimeout(typingTimer);
-  typingTimer = setTimeout(() => { if (!busy && Face.mood === "listening") Face.set("neutral"); }, 1500);
+  typingTimer = setTimeout(() => {
+    if (busy) return;
+    setStatus("online");
+    if (Face.mood === "listening") Face.set("neutral");
+  }, 1500);
 });
 
 // poke the face: giggles, then gets grumpy if you keep going

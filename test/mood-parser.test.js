@@ -36,3 +36,13 @@ test("handles tags split across chunks", () => {
 test("drops unknown moods and keeps ordinary brackets", () => {
   assert.deepEqual(run(["[[banana]]a [link] b"]), [{ type: "text", text: "a [link] b" }]);
 });
+
+test("extracts suggestions, even when split across chunks", () => {
+  assert.deepEqual(run(["[[happy]] Sure! [[sugg", "est: Tell me", " another]] [[suggest: Stop]]"]), [
+    { type: "mood", mood: "happy" },
+    { type: "text", text: " Sure! " },
+    { type: "suggest", text: "Tell me another" },
+    { type: "text", text: " " },
+    { type: "suggest", text: "Stop" },
+  ]);
+});
